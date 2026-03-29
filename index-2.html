@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ministry of the Future — Getting Our Shit Together</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Libre+Franklin:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a1e;
+    --paper: #f4f1eb;
+    --warm: #e8e2d6;
+    --clay: #c4b8a4;
+    --rust: #c2541a;
+    --deep: #2c1810;
+    --sage: #4a6741;
+    --sky: #3a6b8c;
+    --muted: #7a7468;
+    --light: #faf8f4;
+    --display: 'Instrument Serif', Georgia, serif;
+    --body: 'Libre Franklin', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--body);
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 17px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: var(--rust); color: var(--light); }
+
+  /* ---- NAV ---- */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 20px 40px;
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--paper);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s, backdrop-filter 0.3s;
+  }
+  nav.scrolled {
+    border-bottom-color: var(--clay);
+    background: rgba(244, 241, 235, 0.9);
+    backdrop-filter: blur(12px);
+  }
+  .nav-logo {
+    font-family: var(--display);
+    font-size: 24px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--rust); }
+
+  /* ---- HERO ---- */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 40px 80px;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+  .hero h1 {
+    font-family: var(--display);
+    font-size: clamp(48px, 7vw, 96px);
+    font-weight: 400;
+    line-height: 1.05;
+    color: var(--ink);
+    max-width: 900px;
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s forwards;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--rust);
+  }
+  .hero-sub {
+    font-size: 19px;
+    line-height: 1.7;
+    color: var(--muted);
+    max-width: 580px;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s forwards;
+  }
+  .hero-cta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 28px;
+    font-family: var(--body);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+  .btn-primary {
+    background: var(--rust);
+    color: var(--light);
+  }
+  .btn-primary:hover {
+    background: var(--deep);
+    transform: translateY(-1px);
+  }
+  .btn-secondary {
+    background: transparent;
+    color: var(--ink);
+    border: 1.5px solid var(--clay);
+  }
+  .btn-secondary:hover {
+    border-color: var(--ink);
+    transform: translateY(-1px);
+  }
+
+  .hero-aside {
+    position: absolute;
+    right: 40px;
+    bottom: 80px;
+    writing-mode: vertical-rl;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--clay);
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 0.8s 1s forwards;
+  }
+
+  /* ---- SECTION SHARED ---- */
+  section {
+    padding: 100px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: var(--display);
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 400;
+    line-height: 1.15;
+    margin-bottom: 24px;
+    max-width: 700px;
+  }
+  .section-body {
+    font-size: 17px;
+    line-height: 1.8;
+    color: var(--muted);
+    max-width: 600px;
+  }
+  .section-body + .section-body { margin-top: 16px; }
+
+  /* ---- DIVIDER ---- */
+  .divider {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+  .divider hr {
+    border: none;
+    border-top: 1px solid var(--clay);
+  }
+
+  /* ---- HOW IT WORKS ---- */
+  .phases {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-top: 60px;
+  }
+  .phase-card {
+    padding: 32px 24px;
+    border: 1px solid var(--clay);
+    border-radius: 8px;
+    background: var(--light);
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .phase-card:hover {
+    border-color: var(--rust);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+  }
+  .phase-icon {
+    font-size: 28px;
+    margin-bottom: 16px;
+    display: block;
+  }
+  .phase-name {
+    font-family: var(--display);
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+  .phase-desc {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+  .phase-number {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--clay);
+  }
+
+  /* ---- TECHNOLOGY ---- */
+  .tech-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 48px;
+  }
+  .tech-item {
+    padding: 28px;
+    border-left: 3px solid var(--clay);
+    transition: border-color 0.2s;
+  }
+  .tech-item:hover { border-color: var(--rust); }
+  .tech-label {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 8px;
+  }
+  .tech-title {
+    font-family: var(--display);
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+  .tech-desc {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  /* ---- ABOUT ---- */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    gap: 80px;
+    align-items: start;
+    margin-top: 48px;
+  }
+  .about-aside {
+    position: sticky;
+    top: 120px;
+  }
+  .about-tag {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .about-name {
+    font-family: var(--display);
+    font-size: 36px;
+    margin-bottom: 16px;
+  }
+  .about-roles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .role-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 4px 12px;
+    border: 1px solid var(--clay);
+    border-radius: 20px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+  .about-text {
+    font-size: 17px;
+    line-height: 1.8;
+    color: var(--muted);
+  }
+  .about-text + .about-text { margin-top: 20px; }
+  .about-text strong { color: var(--ink); font-weight: 500; }
+
+  /* ---- CALL TO ACTION ---- */
+  .cta-section {
+    background: var(--deep);
+    color: var(--light);
+    padding: 100px 40px;
+    text-align: center;
+    margin: 0;
+    max-width: none;
+  }
+  .cta-section .section-title {
+    color: var(--light);
+    margin: 0 auto 16px;
+    max-width: 600px;
+  }
+  .cta-section .section-body {
+    color: var(--clay);
+    margin: 0 auto 40px;
+    max-width: 500px;
+  }
+
+  /* ---- FOOTER ---- */
+  footer {
+    padding: 40px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--clay);
+    font-family: var(--mono);
+    letter-spacing: 0.05em;
+  }
+  footer a { color: var(--muted); text-decoration: none; }
+  footer a:hover { color: var(--rust); }
+
+  /* ---- REFERENCES ---- */
+  .refs {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--clay);
+  }
+  .ref-item {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .ref-item a { color: var(--sky); text-decoration: none; }
+  .ref-item a:hover { text-decoration: underline; }
+
+  /* ---- ANIMATIONS ---- */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---- RESPONSIVE ---- */
+  @media (max-width: 900px) {
+    .phases { grid-template-columns: 1fr 1fr; }
+    .tech-grid { grid-template-columns: 1fr; }
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    .about-aside { position: static; }
+    nav { padding: 16px 24px; }
+    section, .hero { padding-left: 24px; padding-right: 24px; }
+    .hero-aside { display: none; }
+  }
+  @media (max-width: 600px) {
+    .phases { grid-template-columns: 1fr; }
+    .nav-links { gap: 20px; }
+    .nav-links a { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="#" class="nav-logo">Ministry of the Future</a>
+  <div class="nav-links">
+    <a href="#why">Why this</a>
+    <a href="#how">Agora</a>
+    <a href="#about">About</a>
+    <a href="#demo" class="btn btn-primary" style="padding:8px 20px;font-size:12px;">Join the Conversation</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Ministry of the Future</div>
+  <h1>The future should be <em>better</em> than the present. If it isn't, that's on us.</h1>
+  <p class="hero-sub">
+    We have the knowledge, the culture, and the people to build something 
+    extraordinary. We just haven't decided to do it together yet.
+  </p>
+  <div class="hero-cta">
+    <a href="#demo" class="btn btn-primary">Join the Conversation →</a>
+    <a href="#why" class="btn btn-secondary">Why this exists</a>
+  </div>
+  <div class="hero-aside">Getting our shit together — for Australia</div>
+</div>
+
+<div class="divider"><hr></div>
+
+<!-- WHY THIS EXISTS -->
+<section id="why">
+  <div class="section-label">The situation</div>
+  <div class="section-title">You're building skills the future actually needs. Let's use them.</div>
+  <div class="section-body">
+    Every day, people across this country are getting deeper into their work — 
+    learning how things are designed, engineered, maintained, and governed. 
+    Building competency. Developing judgment. Starting to see how systems 
+    connect and where they fail.
+  </div>
+  <div class="section-body">
+    And yet the big decisions about what Australia builds next — the 
+    infrastructure, the systems, the places we'll all live in — are made 
+    in closed rooms by people optimising for the next election cycle, not 
+    the next fifty years. The people who are deepest in the work, and who'll 
+    live longest with the consequences, are barely part of the conversation.
+  </div>
+  <div class="section-body" style="color: var(--ink); font-weight: 400; margin-top: 24px;">
+    The Ministry of the Future is for anyone who looks at what we've already 
+    built — the systems, the knowledge, the culture — and thinks: <strong>of 
+    course we can do more with this. Of course we can build upon it.</strong> 
+    Your training, your observations, your ability to imagine and dream and 
+    be stubborn about what's possible — that's not just for your employer. 
+    That's for all of us.
+  </div>
+  <div class="section-body" style="color: var(--ink); font-weight: 400; margin-top: 16px;">
+    We're starting with a question: <strong>What should Australia build in 
+    the next fifty years?</strong> And we're using a tool called Agora to 
+    find out where we actually agree.
+  </div>
+</section>
+
+<div class="divider"><hr></div>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-label">The tool</div>
+  <div class="section-title">Agora — how we think together</div>
+  <div class="section-body">
+    Agora is an open-source deliberation platform built on the same foundations as 
+    <a href="https://pol.is" style="color:var(--rust);text-decoration:none;">Polis</a> — the tool behind 
+    <a href="https://info.vtaiwan.tw" style="color:var(--rust);text-decoration:none;">Taiwan's vTaiwan</a> 
+    process, where citizens shaped actual legislation through structured online deliberation.
+    It maps the opinion landscape of any group, reveals hidden consensus, and 
+    structures conversation through four phases.
+  </div>
+
+  <div class="phases">
+    <div class="phase-card">
+      <div class="phase-number">01</div>
+      <span class="phase-icon">✦</span>
+      <div class="phase-name">Dream</div>
+      <div class="phase-desc">
+        Wide-open brainstorm. Everyone submits ideas and votes agree, disagree, 
+        or pass. No constraints, no filtering — just the raw material of 
+        collective imagination.
+      </div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-number">02</div>
+      <span class="phase-icon">◈</span>
+      <div class="phase-name">Shape</div>
+      <div class="phase-desc">
+        The opinion map is revealed. Clusters emerge. Participants see where 
+        they sit in the landscape and respond with more nuanced, bridging 
+        contributions. The picture gets clearer.
+      </div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-number">03</div>
+      <span class="phase-icon">◆</span>
+      <div class="phase-name">Commit</div>
+      <div class="phase-desc">
+        Consensus items become action items. Participants signal what they'll 
+        help make happen. Ideas become plans. Plans find people.
+      </div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-number">04</div>
+      <span class="phase-icon">○</span>
+      <div class="phase-name">Reflect</div>
+      <div class="phase-desc">
+        What worked? What surprised us? The conversation becomes a record 
+        and a reference — seeding the next iteration of collective thinking.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><hr></div>
+
+<!-- TECHNOLOGY -->
+<section id="technology">
+  <div class="section-label">Under the hood</div>
+  <div class="section-title">Faithful implementation of proven methods</div>
+  <div class="section-body">
+    Agora implements the core algorithms described in the Polis research paper, 
+    adapted for phased deliberation and community-scale deployment.
+  </div>
+
+  <div class="tech-grid">
+    <div class="tech-item">
+      <div class="tech-label">Dimensionality Reduction</div>
+      <div class="tech-title">PCA via Power Iteration</div>
+      <div class="tech-desc">
+        Votes form a matrix. Principal component analysis projects participants 
+        into a 2D opinion space — a map of where people stand, computed from 
+        how they actually voted.
+      </div>
+    </div>
+    <div class="tech-item">
+      <div class="tech-label">Clustering</div>
+      <div class="tech-title">K-Means with Silhouette Selection</div>
+      <div class="tech-desc">
+        Opinion groups emerge automatically. The algorithm tests multiple 
+        cluster counts and selects the one that best captures the real 
+        structure of disagreement.
+      </div>
+    </div>
+    <div class="tech-item">
+      <div class="tech-label">Consensus Detection</div>
+      <div class="tech-title">Group-Aware Consensus Metric</div>
+      <div class="tech-desc">
+        Consensus isn't just majority agreement. Agora computes the product of 
+        agreement across all groups — protecting minority dissent and surfacing 
+        genuine cross-group common ground.
+      </div>
+    </div>
+    <div class="tech-item">
+      <div class="tech-label">Bridging</div>
+      <div class="tech-title">Cross-Cluster Agreement Scoring</div>
+      <div class="tech-desc">
+        The most valuable statements are those that unite otherwise-separated 
+        groups. Bridging scores identify the ideas with the power to 
+        transcend tribal boundaries.
+      </div>
+    </div>
+    <div class="tech-item">
+      <div class="tech-label">Missing Data</div>
+      <div class="tech-title">Sparsity-Aware Correction</div>
+      <div class="tech-desc">
+        Not everyone votes on every statement. The √(C/Cp) scaling factor 
+        corrects for this, preventing under-voters from clumping 
+        at the centre of the map.
+      </div>
+    </div>
+    <div class="tech-item">
+      <div class="tech-label">Comment Routing</div>
+      <div class="tech-title">Priority-Weighted Distribution</div>
+      <div class="tech-desc">
+        Statements are shown in a semi-random order weighted toward those 
+        most likely to build consensus, have high PCA loading, or are 
+        new and need exposure.
+      </div>
+    </div>
+  </div>
+
+  <div class="refs">
+    <div class="section-label" style="margin-bottom:12px">References</div>
+    <div class="ref-item">Small, C.T., Bjorkegren, M., Erkkilä, T., Shaw, L. & Megill, C. (2021). Polis: Scaling deliberation by mapping high dimensional opinion spaces. <em>Recerca</em>, 26(2), 1-26. <a href="http://dx.doi.org/10.6035/recerca.5516">doi:10.6035/recerca.5516</a></div>
+    <div class="ref-item">Polis — Open source. <a href="https://github.com/compdemocracy/polis">github.com/compdemocracy/polis</a></div>
+    <div class="ref-item">vTaiwan — Participatory democracy in Taiwan. <a href="https://info.vtaiwan.tw">info.vtaiwan.tw</a></div>
+    <div class="ref-item">Decidim — Technopolitical network for participatory democracy. <a href="https://decidim.org">decidim.org</a></div>
+  </div>
+</section>
+
+<div class="divider"><hr></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">About</div>
+  <div class="section-title">Your expertise matters here</div>
+
+  <div class="about-grid">
+    <div class="about-aside">
+      <div class="about-tag">What we are</div>
+      <div class="about-name">Ministry of the Future</div>
+      <div class="about-roles">
+        <span class="role-tag">Engineers</span>
+        <span class="role-tag">Designers</span>
+        <span class="role-tag">Builders</span>
+        <span class="role-tag">Observers</span>
+        <span class="role-tag">Stubborn Optimists</span>
+      </div>
+    </div>
+    <div>
+      <div class="about-text">
+        You're years into building a competency. You're learning how systems 
+        work — how structures carry load, how water moves through landscapes, 
+        how communities use space, how supply chains hold or break, how design 
+        shapes behaviour. <strong>That knowledge isn't just for your career. 
+        It's for all of us.</strong>
+      </div>
+      <div class="about-text">
+        The Ministry of the Future is a growing network of people — especially 
+        young engineers, designers, and professionals — who believe that the 
+        skills they're building day to day should help inform <strong>what 
+        Australia actually builds next</strong>. Not in fifty years when you're 
+        senior enough to be in the room. Now. While you still have the energy, 
+        the stubbornness, and the imagination to insist on something better.
+      </div>
+      <div class="about-text">
+        But this isn't only for professionals. The parent who knows which 
+        intersection is dangerous, the farmer who knows where the water 
+        actually flows, the teenager who knows why nobody catches the bus — 
+        <strong>contextual awareness is expertise too</strong>. Everyone who 
+        pays attention to the world around them has something this 
+        conversation needs.
+      </div>
+      <div class="about-text">
+        We acknowledge the <strong>incredible agency and power</strong> in our 
+        abilities and culture right now. We also acknowledge the disconnect. 
+        So we're finding new ways to bring people together — for the joy of 
+        living, dreaming, playing and working together toward something 
+        worth building. Because <strong>if the future doesn't look better 
+        than the present, we're going to be angry and disappointed with 
+        ourselves</strong>.
+      </div>
+      <div class="about-text">
+        This isn't anyone's personal project. It belongs to everyone who 
+        shows up. The platform is open source. The conversations are open. 
+        Of course we can build upon what the systems of our world have 
+        already provided us. Of course we will.
+      </div>
+      <div class="about-text">
+        We will all die in the not too distant future. What we build together 
+        in the meantime is what matters.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="demo">
+  <div class="section-label" style="color:var(--clay)">Get involved</div>
+  <div class="section-title">What should Australia build in the next 50 years?</div>
+  <div class="section-body">
+    We're inviting engineers, designers, professionals, and anyone who 
+    cares about what comes next to weigh in. Vote on ideas, submit your 
+    own, and see where we actually agree.
+  </div>
+  <a href="./demo.html" class="btn btn-primary" style="font-size:16px;padding:16px 36px;">
+    Join the Conversation →
+  </a>
+</section>
+
+<footer>
+  <div>Ministry of the Future — Getting our shit together</div>
+  <div style="margin-top:8px">
+    Built with <a href="https://github.com/compdemocracy/polis">Polis</a> methods · 
+    Inspired by <a href="https://info.vtaiwan.tw">vTaiwan</a> · 
+    Open source
+  </div>
+</footer>
+
+<script>
+  // Scroll-aware nav
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  });
+</script>
+
+</body>
+</html>
